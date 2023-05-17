@@ -17,6 +17,7 @@ Let's get it installed and working with it:
 ## Use
 In Windows
 Create Shortcut From `MyApplication.exe` ,and use it wherever you want.
+
 In Linux
 Create Shortcut From `MyApplication.sh` , and use it where you want.
 
