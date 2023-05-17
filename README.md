@@ -3,7 +3,7 @@ RPMG2D upon receiving an input image, is able to analyse the parameters of the i
 Let's get it installed and working with it:
 
 ## Installation
-1. You need to install [Octave GNU](https://octave.org/download) with version 7.3 and above.
+1. You need to install [GNU Octave](https://octave.org/download) with version 7.3 and above.
 	Hint: If you want exactly version 7.3 [Windows](https://ftp.gnu.org/gnu/octave/windows/) or [Linux](https://ftp.gnu.org/gnu/octave/)
 	Hint: In Windows, be sure to add the Octave installation path to the Windows Environment, the path is something like this:
 		" `.\Octave-7.3.0\mingw64\bin` "
