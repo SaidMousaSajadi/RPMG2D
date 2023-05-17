@@ -1,5 +1,5 @@
 # Random Porous Media Generator 2D
-RPMG2D upon receiving an input image,  is able to analyse the parameters of the input shape and simulate similar shapes, then it generates the porous medium using these shapes.
+RPMG2D upon receiving an input image, is able to analyse the parameters of the input shape and simulate similar shapes, then it generates the porous medium using these shapes in **GNU Octave**.
 Let's get it installed and working with it:
 
 ## Installation
