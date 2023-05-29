@@ -2,6 +2,11 @@
 RPMG2D upon receiving an input image, is able to analyse the parameters of the input shape and simulate similar shapes, then it generates the porous medium using these shapes in **GNU Octave**.
 Let's get it installed and working with it:
 
+<p align="center">
+  <img src="https://github.com/yasharsajadi/RPMG2D/blob/master/A%20Sample.png" width="800">
+</p>
+
+
 ## Installation
 1. You need to install [GNU Octave](https://octave.org/download) with version 7.3 and above.
 	
