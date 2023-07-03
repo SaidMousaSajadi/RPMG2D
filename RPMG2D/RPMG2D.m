@@ -8,6 +8,7 @@ pkg load signal % findpeaks
 pkg load splines % smoothing lines
 pkg load ltfat % normalize
 pkg load optim
+pkg load io
 
 global NewD
 global K
@@ -159,6 +160,7 @@ function ShowAngularity(Ax,BW,xc,yc,r,theta,xfar,yfar,xcirc,ycirc)
   plot(Ax,[xc xfar],[yc yfar],'-b','LineWidth',1.25)
   plot(Ax,[xc xcirc],[yc ycirc],'-b','LineWidth',1.25)
   plot(Ax,[xfar xcirc],[yfar ycirc],'-b','LineWidth',1.25)
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowAspectRatio(Ax,BW,majorx1,majorx2,majory1,majory2,minorx1,minorx2,minory1,minory2)
@@ -166,6 +168,7 @@ function ShowAspectRatio(Ax,BW,majorx1,majorx2,majory1,majory2,minorx1,minorx2,m
   hold(Ax,'on') ;
   plot(Ax,[majorx1 , majorx2],[majory1 , majory2],'-b','LineWidth',1.25) ;
   plot(Ax,[minorx1 , minorx2],[minory1 , minory2],'-r','LineWidth',1.25) ;
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowCircularity(Ax,BW,xmic,ymic,rmic,xmcc,ymcc,rmcc,theta)
@@ -179,6 +182,7 @@ function ShowCircularity(Ax,BW,xmic,ymic,rmic,xmcc,ymcc,rmcc,theta)
   plot(Ax,xmic_circ,ymic_circ,'b','LineWidth',1.75) ;
   plot(Ax,xmcc,ymcc,'*r') ;
   plot(Ax,xmcc_circ,ymcc_circ,'r','LineWidth',1.75) ;
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowMZC(Ax,BW,xmic,ymic,rmic,xmcc,ymcc,rmcc,theta)
@@ -191,6 +195,7 @@ function ShowMZC(Ax,BW,xmic,ymic,rmic,xmcc,ymcc,rmcc,theta)
   patch(Ax,[xmic_circ , xmcc_circ] , [ymic_circ , ymcc_circ] , 'g','linestyle','none','FaceAlpha' , 0.3)
   plot(Ax,xmic_circ,ymic_circ,'-b','LineWidth',1.5)
   plot(Ax,xmcc_circ,ymcc_circ,'-b','LineWidth',1.5)
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 
@@ -203,6 +208,7 @@ function ShowLSC(Ax,BW,xmic,ymic,rmic,xmcc,ymcc,rmcc,theta)
   imshow(~BW,'parent',Ax)
   hold(Ax,'on') ;
   plot(Ax,xlsc_circ,ylsc_circ,'m','LineWidth',1.75) ;
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowCompactness(Ax,BW,x,y)
@@ -210,6 +216,7 @@ function ShowCompactness(Ax,BW,x,y)
   hold(Ax,'on') ;
   plot(Ax,x,y,'b','LineWidth',1.25)
   text(Ax,mean(x),mean(y),'\Omega','Color','w','Interpreter','tex','FontSize',11) ;
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowConvexity(Ax,BW,x,y,ConvexBoundary)
@@ -217,6 +224,7 @@ function ShowConvexity(Ax,BW,x,y,ConvexBoundary)
   hold(Ax,'on') ;
   plot(Ax,x,y,"-b",'LineWidth',1.25)
   plot(Ax,ConvexBoundary(:,1),ConvexBoundary(:,2),"-r",'LineWidth',1.25)
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowEccentricity(Ax,BW,Elli_Bound,X1,X2,Y1,Y2,x1,x2,y1,y2,xc,yc,onMajorx,onMajory,onMinorx,onMinory)
@@ -228,6 +236,7 @@ function ShowEccentricity(Ax,BW,Elli_Bound,X1,X2,Y1,Y2,x1,x2,y1,y2,xc,yc,onMajor
   plot(Ax,[xc onMajorx] , [yc onMajory],'g','LineWidth',2.5)
   plot(Ax,[xc onMinorx] , [yc onMinory],'m','LineWidth',2.5)
   plot(Ax,[onMajorx onMinorx],[onMajory onMinory],'c','LineWidth',2.5)
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowElliptic(Ax,BW,x,y,ellix,elliy)
@@ -235,12 +244,14 @@ function ShowElliptic(Ax,BW,x,y,ellix,elliy)
   hold(Ax,'on') ;
   plot(Ax,x,y,'b','LineWidth',1.25)
   plot(Ax,ellix,elliy,'r','LineWidth',1.25)
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowElongation(Ax,BW,x1,x2,x3,x4,y1,y2,y3,y4)
   imshow(~BW,'parent',Ax)
   hold(Ax,'on') ;
   plot(Ax,[x1,x2,x3,x4,x1],[y1,y2,y3,y4,y1],'-g','LineWidth',1.25)
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowRegularity(Ax,BW,xc,yc,x,y)
@@ -248,6 +259,7 @@ function ShowRegularity(Ax,BW,xc,yc,x,y)
   hold(Ax,'on') ;
   plot(Ax,x,y,'b','LineWidth',1.25)
   plot(Ax,xc,yc,'r','LineWidth',1.25)
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowRoundness(Ax,BW,xcent,ycent,r,XMIC,YMIC,RMIC,theta)
@@ -261,6 +273,7 @@ function ShowRoundness(Ax,BW,xcent,ycent,r,XMIC,YMIC,RMIC,theta)
   xcircMIC = XMIC + RMIC*cos(theta) ;
   ycircMIC = YMIC + RMIC*sin(theta) ;
   plot(Ax,xcircMIC,ycircMIC,'b','LineWidth',2) ;
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowShapeFactor(Ax,BW,x,y,xc,yc,X1,X2,Y1,Y2)
@@ -269,6 +282,7 @@ function ShowShapeFactor(Ax,BW,x,y,xc,yc,X1,X2,Y1,Y2)
   plot(Ax,x,y,'-b','LineWidth',1.25)
   plot(Ax,[X1 X2],[Y1 Y2],'-g','LineWidth',1.25)
   text(Ax,xc,yc,'\Omega','Color','w','Interpreter','tex','FontSize',11) ;
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowSolidity(Ax,BW,x,y,xc,yc)
@@ -276,6 +290,7 @@ function ShowSolidity(Ax,BW,x,y,xc,yc)
   hold(Ax,'on') ;
   patch(Ax,xc,yc,'r','edgecolor','none')
   patch(Ax,x,y,'k','edgecolor','none')
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function ShowSphericity(Ax,BW,xc,yc,rmcc,theta)
@@ -286,6 +301,7 @@ function ShowSphericity(Ax,BW,xc,yc,rmcc,theta)
   plot(Ax,Xcirc,Ycirc,'r','LineWidth',1.5) ;
   ID = randi(length(Xcirc)) ;
   plot(Ax,[xc Xcirc(ID)],[yc Ycirc(ID)],'r','LineWidth',1.5) ;
+  axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
 function Processing(STR,obj)
@@ -544,11 +560,9 @@ function Update_UI(obj,init = false)
 
     case {h.SaveTable}
       Processing('p',h.Process)
-      [FileName, FilePath, FileIndex] = uiputfile({"*.xlsx"}) ;
+      [FileName, FilePath, FileIndex] = uiputfile({"*.csv"}) ;
       if (FileIndex) ~= 0
-        xlswrite([FilePath ,  FileName], h.Col_Names,'B1:E1') ;
-        xlswrite([FilePath ,  FileName], get(h.Table,'Data'),'B2:E14') ;
-        xlswrite([FilePath ,  FileName], h.Row_Names' ,'A2:A14') ;
+        mycsvwrite([FilePath ,  FileName],get(h.Table,'RowName'),get(h.Table,'ColumnName'),get(h.Table,'Data')) ;
       end
       Processing('r',h.Process)
 
@@ -557,7 +571,7 @@ function Update_UI(obj,init = false)
       if h.FlagGeneShape
         [FileName, FilePath, FileIndex] = uiputfile({"*.jpg";"*.png"}) ;
         if (FileIndex) ~= 0
-          imshow(~NewBWShow,'parent',h.Ax_Ana)
+          imshow(~h.NewBWShow,'parent',h.Ax_Ana)
           F = getframe(h.Ax_Ana);
           Image = frame2im(F);
           imwrite(Image, [FilePath ,  FileName])
@@ -570,12 +584,12 @@ function Update_UI(obj,init = false)
       if h.FlagGeneShape
         [FileName, FilePath, FileIndex] = uiputfile({"*.json"}) ;
         if (FileIndex) ~= 0
-          SturctToJSON(h.Org,FileName)
+          SturctToJSON(h.Org,[FilePath FileName])
         end
       elseif h.FlagSteps
         [FileName, FilePath, FileIndex] = uiputfile({"*.json"}) ;
         if (FileIndex) ~= 0
-          SturctToJSON(h.init_Org,FileName)
+          SturctToJSON(h.init_Org,[FilePath FileName])
         end
       else
       end
@@ -659,11 +673,11 @@ function Update_UI(obj,init = false)
           h.Table = Table_Update(h.Table,h.Shape,AngularFactor,1) ;
         elseif h.Shape == 2 && h.FlagGeneShape == 1
           [xc,yc,r,eff,xfar,yfar,X,xcirc,ycirc,alpha,AngularFactor] = Angularity(h.NewShape2,'Skeleton') ;
-          ShowAngularity(h.Ax_Gen1,h.NewShape1,xc,yc,r,h.theta,xfar,yfar,xcirc,ycirc)
+          ShowAngularity(h.Ax_Gen2,h.NewShape2,xc,yc,r,h.theta,xfar,yfar,xcirc,ycirc)
           h.Table = Table_Update(h.Table,h.Shape,AngularFactor,1) ;
         elseif h.Shape == 3 && h.FlagGeneShape == 1
           [xc,yc,r,eff,xfar,yfar,X,xcirc,ycirc,alpha,AngularFactor] = Angularity(h.NewShape3,'Skeleton') ;
-          ShowAngularity(h.Ax_Gen1,h.NewShape1,xc,yc,r,h.theta,xfar,yfar,xcirc,ycirc)
+          ShowAngularity(h.Ax_Gen3,h.NewShape3,xc,yc,r,h.theta,xfar,yfar,xcirc,ycirc)
           h.Table = Table_Update(h.Table,h.Shape,AngularFactor,1) ;
         end
       end
@@ -797,7 +811,7 @@ function Update_UI(obj,init = false)
       Processing('r',h.Process)
 
     case {h.Circular_Skel_Peak}
-      Processing('r',h.Process)
+      Processing('p',h.Process)
       if h.FlagSteps
         if h.Shape == 0
           [xmic,ymic,rmic,xmcc,ymcc,rmcc,CircFactor] = Circularity(h.BW,'Skeleton','Peak') ;
@@ -1504,7 +1518,7 @@ function Update_UI(obj,init = false)
       if h.FlagGeneShape
         [FileName, FilePath, FileIndex] = uiputfile({"*.json"}) ;
         if (FileIndex) ~= 0
-          SturctToJSON({h.Sh1;h.Sh2;h.Sh3},FileName)
+          SturctToJSON({h.Sh1;h.Sh2;h.Sh3},[FilePath FileName])
         end
       end
 
@@ -1586,7 +1600,7 @@ function Update_UI(obj,init = false)
             Struc.XC = h.Shapes.XC(i,1) ; Struc.YC = h.Shapes.YC(i,1) ; Struc.W = 1 ; Struc.X = h.Shapes.X(i,:) ; Struc.Y = h.Shapes.Y(i,:) ; Struc.D = h.Shapes.D(i,:) ; Struc.Theta = h.Shapes.Theta(i,:) ;
             Cell{i,1} = Struc ;
           end
-          SturctToJSON(Cell,FileName)
+          SturctToJSON(Cell,[FilePath FileName])
         end
       end
 
@@ -1608,7 +1622,7 @@ root.Open = uimenu(root.F, "label", "&Open Image", "accelerator", "O", "callback
 uimenu(root.F, "label", "E&xit", "accelerator", "X", "callback", 'close(root.Fig) ; exit'); % for .exe
 
 root.SaveImgAn = uimenu(root.E, "label", "&Save Last Analysis as Image", "accelerator", "S","callback", @Update_UI);
-root.SaveTable = uimenu(root.E, "label", "Save &Table as Sheet(.xlsx)", "accelerator", "T","callback", @Update_UI);
+root.SaveTable = uimenu(root.E, "label", "Save &Table as Sheet(.csv)", "accelerator", "T","callback", @Update_UI);
 root.SaveImgRe = uimenu(root.E, "label", "Save Reconstructed Shape as Image", "accelerator", "","callback", @Update_UI);
 root.SaveImgJSON = uimenu(root.E, "label", "Save Shape as JSON", "accelerator", "","callback", @Update_UI);
 
@@ -1688,12 +1702,12 @@ root.Save2DPMJSON = uimenu(root.G, "label", "Save Porous Medium as JSON", "accel
 uimenu(root.H, "label", "&Documentation", "accelerator", "D","callback", "system(['start ./Reference/Manual.pdf']) ;");
 uimenu(root.H, "label", "About Me", "accelerator", "","callback", "web('https://www.linkedin.com/in/seyed-mousa-sajadi-8284b1124/','-new')");
 
-root.Ax_Org = axes("position", [0.01 0.489 0.315 0.40],'box','on','xtick',[],'ytick',[],'colormap',colormap('gray'));
-root.Ax_Ana = axes("position", [0.01 0.020 0.315 0.40],'box','on','xtick',[],'ytick',[],'colormap',colormap('gray'));
-root.txt_Org = uicontrol (root.Fig, "style", "text", "string","Original Image","units","normalized","position", [0.1 0.9 0.1 0.03],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"));
-root.txt_Ana = uicontrol (root.Fig, "style", "text", "string","Latest Image Analysis","units","normalized","position", [0.1 0.43 0.1 0.03],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"));
+root.Ax_Org = axes("position", [0.015 0.510 0.315 0.425],'box','on','xtick',[],'ytick',[],'colormap',colormap('gray'));
+root.Ax_Ana = axes("position", [0.015 0.020 0.315 0.425],'box','on','xtick',[],'ytick',[],'colormap',colormap('gray'));
+root.txt_Org = uicontrol (root.Fig, "style", "text", "string","Original Image","units","normalized","position", [0.112 0.94 0.1 0.03],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"));
+root.txt_Ana = uicontrol (root.Fig, "style", "text", "string","Latest Image Analysis","units","normalized","position", [0.112 0.455 0.1 0.03],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"));
 
-root.P = uipanel ("title", "Analysis of Parameters for Original/Generated Shape", "position", [0.335 0.85 0.317 0.1],'backgroundcolor',get(root.Fig,"Color"));
+root.P = uipanel ("title", "Analysis of Parameters for Original/Generated Shape", "position", [0.340 0.85 0.3195 0.10],'backgroundcolor',get(root.Fig,"Color"));
 root.Radio0 = uicontrol (root.P, "style", "radiobutton", "string","Original   ","units","normalized","position", [0.02 0.35 0.317 0.35],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"),'value' , 1,'callback',@Update_UI);
 root.Radio1 = uicontrol (root.P, "style", "radiobutton", "string","Generated 1","units","normalized","position", [0.25 0.35 0.317 0.35],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"),'value' , 0,'callback',@Update_UI);
 root.Radio2 = uicontrol (root.P, "style", "radiobutton", "string","Generated 2","units","normalized","position", [0.50 0.35 0.317 0.35],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"),'value' , 0,'callback',@Update_UI);
@@ -1702,7 +1716,7 @@ root.Radio3 = uicontrol (root.P, "style", "radiobutton", "string","Generated 3",
 root.TableData = nan(13,4);
 root.Row_Names = { "Angularity", "Aspect Ratio", "Circularity" , "Compactness" , "Convexity" , "Eccentricity" , "Elliptic Smoothness" , "Elongation" , "Regularity" , "Roundness" , "ShapeFactor" , "Solidity" , "Sphericity"};
 root.Col_Names = { "Original", "Generated 1", "Generated 2" , "Generated 3"};
-root.Table = uitable (root.Fig, "Data", root.TableData, "RowName", root.Row_Names, "ColumnName", root.Col_Names,"units","normalized","Position",[0.335 0.45 0.317 0.367],"fontsize" ,8);
+root.Table = uitable (root.Fig, "Data", root.TableData, "RowName", root.Row_Names, "ColumnName", root.Col_Names,"units","normalized","Position",[0.340 0.365 0.3195 0.453],"fontsize" ,8);
 
 root.Ax_Gen1 = axes("position", [0.67 0.660 0.315 0.28],'box','on','xtick',[],'ytick',[],'colormap',colormap('gray'));
 root.Ax_Gen2 = axes("position", [0.67 0.340 0.315 0.28],'box','on','xtick',[],'ytick',[],'colormap',colormap('gray'));
