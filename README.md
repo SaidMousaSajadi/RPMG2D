@@ -33,6 +33,6 @@ Create Shortcut From `MyApplication.sh` , and use it where you want.
 Not yet completed.
 
 ## Tutorials
-Will be added.
+[Youtube Video](https://www.youtube.com/watch?v=xuQmXj7S-BA&feature=youtu.be)
 
 
