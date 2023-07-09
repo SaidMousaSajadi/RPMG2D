@@ -390,7 +390,7 @@ function [Center,R] = RandomShapeGenerator(Dim,R_min,R_max,Bound)
     Center = cat(1,Center,X_new) ;
     R = cat(1,R,R_new) ;
     [Gir,id] = update_grid(X_new,R_new,Gir,R_min) ; % remaining grids
-    % 
+    %
     if ~flag
       Rg(id) = [] ;
     end
@@ -514,43 +514,35 @@ function Update_UI(obj,init = false)
   switch (gcbo)
     case {h.Open}
       Processing('p',h.Process)
-      [h.FileName, h.FilePath, h.FileIndex] = uigetfile({"*.jpg";"*.png"}) ;
+      [h.FileName, h.FilePath, h.FileIndex] = uigetfile({"*.jpeg;*.jpg;*.tiff;*.tif;*.png", "Supported Picture Formats";"*.png", "Portable Network Graphics";"*.jpeg ; *.jpg", "Joint Photographic Experts Group";"*.tif ; *.tiff", "Tagged Image File Format"}) ;
       if (h.FileIndex) ~= 0
         NameSpl = strsplit(h.FileName,".") ;
-        if NameSpl{1,end} == 'png' | NameSpl{1,end} == 'jpg'
-          [h.IM , h.Map]= imread([h.FilePath h.FileName]) ;
-          if islogical(h.IM)
-            h.BW = h.IM(:,:,1) ;
-          else
-            if size(h.IM,3) == 3
-              h.G = rgb2gray(h.IM) ;
-            else
-              h.G = h.IM(:,:) ;
-            end
-            h.BW = im2bw(h.G,"moments") ; % grayscale image to binary image
-          end
-          h.BW = imfill(~h.BW,'holes');
-          h.BW = imresize(h.BW,[200 NaN]) ; % for decrease compute process
-          [XC,YC,W,X,Y,D,T] = InitialValue(h.BW) ;
-          init_Org.XC = XC ; init_Org.YC = YC ; init_Org.W = W ; init_Org.X = X ; init_Org.Y = Y ; init_Org.D = D ; init_Org.Theta = T ;
-          h.init_Org = init_Org ;
-          imshow(~h.BW,'parent',h.Ax_Org)
-          imshow(~h.BW,'parent',h.Ax_Ana)
-          cla(h.Ax_Gen1)
-          cla(h.Ax_Gen2)
-          cla(h.Ax_Gen3)
-          set(h.Table,'Data',h.TableData) ;
-          h.FlagSteps = true ;
-          h.FlagGeneShape = false ;
-          h.FlagGenePM = false ;
-          guidata(gcf,h) % update handles
+        switch NameSpl{1,end}
+          case {'jpg','jpeg','png','tif','tiff'}
+            [h.IM , h.Map]= imread([h.FilePath h.FileName]) ;
+            [h.BW , h.Map] = Image2Binary(h.IM , h.Map) ;
+            h.BW = imfill(~h.BW,'holes');
+            h.BW = imresize(h.BW,[200 NaN]) ; % for decrease compute process
+            [XC,YC,W,X,Y,D,T] = InitialValue(h.BW) ;
+            init_Org.XC = XC ; init_Org.YC = YC ; init_Org.W = W ; init_Org.X = X ; init_Org.Y = Y ; init_Org.D = D ; init_Org.Theta = T ;
+            h.init_Org = init_Org ;
+            imshow(~h.BW,'parent',h.Ax_Org)
+            imshow(~h.BW,'parent',h.Ax_Ana)
+            cla(h.Ax_Gen1)
+            cla(h.Ax_Gen2)
+            cla(h.Ax_Gen3)
+            set(h.Table,'Data',h.TableData) ;
+            h.FlagSteps = true ;
+            h.FlagGeneShape = false ;
+            h.FlagGenePM = false ;
+            guidata(gcf,h) % update handles
         end
       end
       Processing('r',h.Process)
 
     case {h.SaveImgAn}
       Processing('p',h.Process)
-      [FileName, FilePath, FileIndex] = uiputfile({"*.jpg";"*.png"}) ;
+      [FileName, FilePath, FileIndex] = uiputfile({"*.jpeg;*.jpg;*.png", "Supported Picture Formats";"*.png", "Portable Network Graphics";"*.jpeg ; *.jpg", "Joint Photographic Experts Group"}) ;
       if (FileIndex) ~= 0
         F = getframe(h.Ax_Ana);
         Image = frame2im(F);
@@ -560,7 +552,7 @@ function Update_UI(obj,init = false)
 
     case {h.SaveTable}
       Processing('p',h.Process)
-      [FileName, FilePath, FileIndex] = uiputfile({"*.csv"}) ;
+      [FileName, FilePath, FileIndex] = uiputfile({"*.csv","Comma-Separated Values"}) ;
       if (FileIndex) ~= 0
         mycsvwrite([FilePath ,  FileName],get(h.Table,'RowName'),get(h.Table,'ColumnName'),get(h.Table,'Data')) ;
       end
@@ -569,7 +561,7 @@ function Update_UI(obj,init = false)
     case {h.SaveImgRe}
       Processing('p',h.Process)
       if h.FlagGeneShape
-        [FileName, FilePath, FileIndex] = uiputfile({"*.jpg";"*.png"}) ;
+        [FileName, FilePath, FileIndex] = uiputfile({"*.jpeg;*.jpg;*.png", "Supported Picture Formats";"*.png", "Portable Network Graphics";"*.jpeg ; *.jpg", "Joint Photographic Experts Group"}) ;
         if (FileIndex) ~= 0
           imshow(~h.NewBWShow,'parent',h.Ax_Ana)
           F = getframe(h.Ax_Ana);
@@ -582,12 +574,12 @@ function Update_UI(obj,init = false)
     case {h.SaveImgJSON}
       Processing('p',h.Process)
       if h.FlagGeneShape
-        [FileName, FilePath, FileIndex] = uiputfile({"*.json"}) ;
+        [FileName, FilePath, FileIndex] = uiputfile({"*.json","JavaScript Object Notation"}) ;
         if (FileIndex) ~= 0
           SturctToJSON(h.Org,[FilePath FileName])
         end
       elseif h.FlagSteps
-        [FileName, FilePath, FileIndex] = uiputfile({"*.json"}) ;
+        [FileName, FilePath, FileIndex] = uiputfile({"*.json","JavaScript Object Notation"}) ;
         if (FileIndex) ~= 0
           SturctToJSON(h.init_Org,[FilePath FileName])
         end
@@ -873,7 +865,7 @@ function Update_UI(obj,init = false)
             ShowLSC(h.Ax_Gen3,h.NewShape3,xmic,ymic,rmic,xmcc,ymcc,rmcc,h.theta)
           end
         end
-      
+
       guidata(gcf,h) % update handles
       Processing('r',h.Process)
 
@@ -1497,7 +1489,7 @@ function Update_UI(obj,init = false)
     case {h.SaveGeneratedImage}
       Processing('p',h.Process)
       if h.FlagGeneShape
-        [FileName, FilePath, FileIndex] = uiputfile({"*.jpg";"*.png"}) ;
+        [FileName, FilePath, FileIndex] = uiputfile({"*.jpeg;*.jpg;*.png", "Supported Picture Formats";"*.png", "Portable Network Graphics";"*.jpeg ; *.jpg", "Joint Photographic Experts Group"}) ;
         if (FileIndex) ~= 0
           F1 = getframe(h.Ax_Gen1);
           Image1 = frame2im(F1);
@@ -1516,7 +1508,7 @@ function Update_UI(obj,init = false)
     case {h.SaveGeneratedJSON}
       Processing('p',h.Process)
       if h.FlagGeneShape
-        [FileName, FilePath, FileIndex] = uiputfile({"*.json"}) ;
+        [FileName, FilePath, FileIndex] = uiputfile({"*.json","JavaScript Object Notation"}) ;
         if (FileIndex) ~= 0
           SturctToJSON({h.Sh1;h.Sh2;h.Sh3},[FilePath FileName])
         end
@@ -1525,7 +1517,7 @@ function Update_UI(obj,init = false)
       Processing('r',h.Process)
 
     case {h.RunPM}
-      
+
       if h.FlagGeneShape
         try
           Processing('p',h.Process)
@@ -1574,9 +1566,9 @@ function Update_UI(obj,init = false)
     case {h.Save2DPMImage}
       Processing('p',h.Process)
       if h.FlagGenePM
-        [FileName, FilePath, FileIndex] = uiputfile({"*.jpg";"*.png"}) ;
+        [FileName, FilePath, FileIndex] = uiputfile({"*.jpeg;*.jpg;*.png", "Supported Picture Formats";"*.png", "Portable Network Graphics";"*.jpeg ; *.jpg", "Joint Photographic Experts Group"}) ;
         if (FileIndex) ~= 0
-          figure ; Ax = axes("Units",'Normalized',"Position",[0 0 1 1]) ; 
+          figure('name',"Saved Image",'NumberTitle','off','resize','off') ; Ax = axes("Units",'Normalized',"Position",[0 0 1 1]) ;
           for i = 1:size(h.Shapes.X ,1)
             hold on ; patch(Ax,h.Shapes.X(i,:),h.Shapes.Y(i,:),"k",'EdgeColor',"none")
           end
@@ -1593,7 +1585,7 @@ function Update_UI(obj,init = false)
     case {h.Save2DPMJSON}
       Processing('p',h.Process)
       if h.FlagGenePM
-        [FileName, FilePath, FileIndex] = uiputfile({"*.json"}) ;
+        [FileName, FilePath, FileIndex] = uiputfile({"*.json","JavaScript Object Notation"}) ;
         if (FileIndex) ~= 0
           Cell = {} ;
           for i = 1:size(h.Shapes.X ,1)
@@ -1605,7 +1597,7 @@ function Update_UI(obj,init = false)
       end
 
       Processing('r',h.Process)
-  
+
   end % Switch
 end
 
