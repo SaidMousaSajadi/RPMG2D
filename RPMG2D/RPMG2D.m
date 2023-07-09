@@ -1602,7 +1602,7 @@ function Update_UI(obj,init = false)
 end
 
 ##
-root.Fig = figure("toolbar", "none",'uicontextmenu',[],'menubar','none','name',"Random Porous Medium Generator 2D",'NumberTitle','off','resize','off','units','normalized',"Position", [0.02 0.08 0.96 0.85],"CloseRequestFcn",'exit') ; % for .exe
+root.Fig = figure("toolbar", "none",'uicontextmenu',[],'menubar','none','name',"Random Porous Medium Generator 2D",'NumberTitle','off','resize','off','units','normalized',"Position", [2.1962e-03 6.2500e-02 9.9414e-01 8.6979e-01],"CloseRequestFcn",'exit') ; % for .exe
 root.F = uimenu("label", "&File", "accelerator", "f",'callback',@Update_UI);
 root.E = uimenu("label", "&Edit", "accelerator", "e");
 root.A = uimenu("label", "&Analysis", "accelerator", "a");

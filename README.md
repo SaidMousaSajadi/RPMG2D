@@ -30,7 +30,7 @@ In Linux
 Create Shortcut From `MyApplication.sh` , and use it where you want.
 
 ## Manual
-Not yet completed.
+[PDF](https://github.com/yasharsajadi/RPMG2D/blob/master/RPMG2D/Reference/Manual.pdf)
 
 ## Tutorials
 [Youtube Video](https://www.youtube.com/watch?v=xuQmXj7S-BA&feature=youtu.be)
