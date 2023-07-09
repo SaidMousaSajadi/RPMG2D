@@ -1568,7 +1568,7 @@ function Update_UI(obj,init = false)
       if h.FlagGenePM
         [FileName, FilePath, FileIndex] = uiputfile({"*.jpeg;*.jpg;*.png", "Supported Picture Formats";"*.png", "Portable Network Graphics";"*.jpeg ; *.jpg", "Joint Photographic Experts Group"}) ;
         if (FileIndex) ~= 0
-          figure('name',"Saved Image",'NumberTitle','off','resize','off') ; Ax = axes("Units",'Normalized',"Position",[0 0 1 1]) ;
+          figure('name',"Saved Image",'NumberTitle','off','resize','off',"toolbar", "none",'uicontextmenu',[],'menubar','none') ; Ax = axes("Units",'Normalized',"Position",[0 0 1 1]) ;
           for i = 1:size(h.Shapes.X ,1)
             hold on ; patch(Ax,h.Shapes.X(i,:),h.Shapes.Y(i,:),"k",'EdgeColor',"none")
           end
