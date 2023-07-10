@@ -1,7 +1,7 @@
 function [BW,M] = Image2Binary(IM,M)
   pkg load image ;
   if ndims(IM) == 2 % 2D
-    if islogical(IM) % Binary
+    if islogical(IM) % Binary ?
       BW = IM(:,:,1) ;
     else % No-Binary
       if isempty(M) % No-ColorMap
@@ -18,9 +18,9 @@ function [BW,M] = Image2Binary(IM,M)
       BW = IM(:,:,1) ;
     else % No-Binary
       if isempty(M) % No-ColorMap
-        G = rgb2gray(IM) ;
+        G = double(rgb2gray(IM))/255 ;
         BW = im2bw(G,"moments") ;
-      else % ColorMap
+      else % ColorMap ?
         IM = ind2rgb(IM,M) ;
         G = rgb2gray(IM) ;
         BW = im2bw(G,"moments") ;
