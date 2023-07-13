@@ -23,6 +23,37 @@ root.FlagGenePM = false ;
 %%%%%%%%%%%%%%%%%%%%%%%%           %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%           %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%           %%%%%%%%%%%%%%%%%%%%%%%%
+function RGB = IMG2RGB(IM,M)
+  if ~islogical(IM)
+    if isempty(M)
+      if ndims(IM) == 2
+        [IND , M] = gray2ind(IM) ;
+        RGB = ind2rgb(IND,M) ;
+      elseif ndims(IM) == 3 && size(IM,3) == 3
+        RGB = IM ;
+      end
+    else
+      RGB = ind2rgb(IM,M) ;
+    end
+  else
+    RGB = IM(:,:,1) ;
+  end
+end
+%
+function GRAY = RGB2GRAY(RGB)
+  if ~islogical(RGB)
+    GRAY = rgb2gray(RGB) ;
+    switch class(GRAY)
+      case {'uint8'}
+        GRAY = double(GRAY)/255 ;
+      case {'uint16'}
+        GRAY = double(GRAY)/65535 ;
+    end
+  else
+    GRAY = double(RGB) ;
+  end
+end
+
 function Theta = AngleFinder(x0,y0,X,Y)
   Theta = atan2(y0 - Y, x0 - X) * (180 / pi) ;
 end
@@ -304,20 +335,25 @@ function ShowSphericity(Ax,BW,xc,yc,rmcc,theta)
   axis(Ax,'tight') ;
   hold(Ax,'off') ;
 end
+
 function Processing(STR,obj)
-  if STR == 'e'
-    set(obj,'string',' Error Occurred !!!')
-    set(obj,'backgroundcolor',[1 0.785 0.785])
-  elseif STR == 'p'
-    set(obj,'string',' In Processing ...')
-    set(obj,'backgroundcolor',[1 0.863 0.666])
-  else
-    set(obj,'string',' Ready')
-    set(obj,'backgroundcolor',[0.785 1 0.785])
+  switch lower(STR)
+    case {'e'}
+      set(obj,'string',' Error Occurred !!!')
+      set(obj,'backgroundcolor',[1 0.785 0.785])
+    case {'p'}
+      set(obj,'string',' In Processing ...')
+      set(obj,'backgroundcolor',[1 0.863 0.666])
+    case {'r'}
+      set(obj,'string',' Ready')
+      set(obj,'backgroundcolor',[0.785 1 0.785])
+    otherwise
+      set(obj,'string',[' ' STR])
+      set(obj,'backgroundcolor',[1 0.863 0.666])
   end
 end
-function [Center,R] = RandomShapeGenerator(Dim,R_min,R_max,Bound)
 
+function [Center,R] = RandomShapeGenerator(Dim,R_min,R_max,Bound)
   %% Grids
   dx = R_min/50 ;
   x = 0:dx:Dim(1) ;
@@ -515,30 +551,40 @@ function Update_UI(obj,init = false)
     case {h.Open}
       Processing('p',h.Process)
       [h.FileName, h.FilePath, h.FileIndex] = uigetfile({"*.jpeg;*.jpg;*.tiff;*.tif;*.png", "Supported Picture Formats";"*.png", "Portable Network Graphics";"*.jpeg ; *.jpg", "Joint Photographic Experts Group";"*.tif ; *.tiff", "Tagged Image File Format"}) ;
+      Processing('r',h.Process)
       if (h.FileIndex) ~= 0
         NameSpl = strsplit(h.FileName,".") ;
         switch NameSpl{1,end}
           case {'jpg','jpeg','png','tif','tiff'}
+            Processing('p',h.Process)
             [h.IM , h.Map]= imread([h.FilePath h.FileName]) ;
-            [h.BW , h.Map] = Image2Binary(h.IM , h.Map) ;
+            h.IM = IMG2RGB(h.IM,h.Map) ;
+            h.Gray = RGB2GRAY(h.IM) ;
+            h.BW = im2bw(h.Gray,"moments") ;
             h.BW = imfill(~h.BW,'holes');
             h.BW = imresize(h.BW,[200 NaN]) ; % for decrease compute process
-            [XC,YC,W,X,Y,D,T] = InitialValue(h.BW) ;
-            init_Org.XC = XC ; init_Org.YC = YC ; init_Org.W = W ; init_Org.X = X ; init_Org.Y = Y ; init_Org.D = D ; init_Org.Theta = T ;
-            h.init_Org = init_Org ;
-            imshow(~h.BW,'parent',h.Ax_Org)
-            imshow(~h.BW,'parent',h.Ax_Ana)
-            cla(h.Ax_Gen1)
-            cla(h.Ax_Gen2)
-            cla(h.Ax_Gen3)
-            set(h.Table,'Data',h.TableData) ;
-            h.FlagSteps = true ;
-            h.FlagGeneShape = false ;
-            h.FlagGenePM = false ;
-            guidata(gcf,h) % update handles
+            try
+              [XC,YC,W,X,Y,D,T] = InitialValue(h.BW) ;
+              init_Org.XC = XC ; init_Org.YC = YC ; init_Org.W = W ; init_Org.X = X ; init_Org.Y = Y ; init_Org.D = D ; init_Org.Theta = T ;
+              h.init_Org = init_Org ;
+              imshow(~h.BW,'parent',h.Ax_Org)
+              imshow(~h.BW,'parent',h.Ax_Ana)
+              cla(h.Ax_Gen1)
+              cla(h.Ax_Gen2)
+              cla(h.Ax_Gen3)
+              set(h.Table,'Data',h.TableData) ;
+              h.FlagSteps = true ;
+              h.FlagGeneShape = false ;
+              h.FlagGenePM = false ;
+              guidata(gcf,h) % update handles
+              Processing('r',h.Process)
+            catch
+              Processing("Image is Invalid.",h.Process)
+            end
+            
         end
       end
-      Processing('r',h.Process)
+      
 
     case {h.SaveImgAn}
       Processing('p',h.Process)
@@ -1479,7 +1525,7 @@ function Update_UI(obj,init = false)
           Processing('r',h.Process)
           ####### End of Processing
         catch
-          Processing('e',h.Process)
+          Processing("Grains weren't generated well.",h.Process)
         end
 
       end
@@ -1537,7 +1583,7 @@ function Update_UI(obj,init = false)
           if R_max.^2 < Dim(1)*Dim(2)
               [C,R] = RandomShapeGenerator(Dim,R_min,R_max,Bound) ;
           else
-              Processing('e',h.Process)
+              Processing("Generated grains are larger than base area.",h.Process)
           end
           %% Packing
           R = R-0.5*R*(h.Packing) ;
@@ -1557,7 +1603,7 @@ function Update_UI(obj,init = false)
           h.FlagGenePM = 1 ;
           Processing('r',h.Process)
         catch
-          Processing('e',h.Process)
+          Processing("Generated grains weren't well placed on area.",h.Process)
         end
       end
 
@@ -1716,7 +1762,8 @@ root.Ax_Gen3 = axes("position", [0.67 0.020 0.315 0.28],'box','on','xtick',[],'y
 root.txt_Gen1 = uicontrol (root.Fig, "style", "text", "string","Generated Shape 1","units","normalized","position", [0.79 0.945 0.1 0.03],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"));
 root.txt_Gen2 = uicontrol (root.Fig, "style", "text", "string","Generated Shape 2","units","normalized","position", [0.79 0.625 0.1 0.03],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"));
 root.txt_Gen3 = uicontrol (root.Fig, "style", "text", "string","Generated Shape 3","units","normalized","position", [0.79 0.305 0.1 0.03],'fontsize',8,'backgroundcolor',get(root.Fig,"Color"));
-root.Process = uicontrol (root.Fig, "style", "text", "string"," Ready","units","normalized","position", [0.00 0.00 0.055 0.018],'fontsize',6,'backgroundcolor',[0.785 1 0.785],"horizontalalignment",'left');
+
+root.Process = uicontrol (root.Fig, "style", "text", "string"," Ready","units","normalized","position", [0.00 0.00 0.255 0.018],'fontsize',6,'backgroundcolor',[0.785 1 0.785],"horizontalalignment",'left');
 
 
 guidata(gcf,root) ;
