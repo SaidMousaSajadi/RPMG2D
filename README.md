@@ -1,3 +1,13 @@
+## License
+
+This project is licensed under a custom **Academic Non-Commercial License (ANCL)**.
+
+📌 Use is permitted for **academic and research purposes only**.  
+🚫 **Commercial use is strictly prohibited** without prior written permission.  
+© 2025 [Said Mousa Sajadi and Elahe Shahrian]
+
+
+
 # Random Porous Media Generator 2D
 RPMG2D upon receiving an input image, is able to analyse the parameters of the input shape and simulate similar shapes, then it generates the porous medium using these shapes in **GNU Octave**.
 Let's get it installed and working with it:
